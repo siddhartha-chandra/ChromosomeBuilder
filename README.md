@@ -1,4 +1,4 @@
-# DNA-Concatenation
+# Chromosome-Builder
 
 Challenge:
 The input to the problem is at most 50 DNA sequences (i.e, the character
