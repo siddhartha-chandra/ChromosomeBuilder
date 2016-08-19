@@ -43,13 +43,50 @@ object ChromosomeStitchHelpers{
   }
 
 
+  def getDNASequenceForLeftOverlap(reference: DNASequence,
+                                   candidate: DNASequence,
+                                   overlapLength: Int) = {
+    val newSequence = candidate.sequence.dropRight(overlapLength) + reference.sequence
+    val newFragment = candidate.fragmentName + "|" + reference.fragmentName
+    DNASequence(newFragment, newSequence)
+  }
+
+  def getDNASequenceForRightOverlap(reference: DNASequence,
+                                    candidate: DNASequence,
+                                    overlapLength: Int) = {
+    val newSequence = reference.sequence + candidate.sequence.drop(overlapLength)
+    val newFragment = reference.fragmentName + "|" +candidate.fragmentName
+    DNASequence(newFragment, newSequence)
+  }
+
+  def findMaxLeftOverlap(remainingDnaSequences: List[DNASequence],
+                         accumulator: DNASequence) = {
+    remainingDnaSequences.map{o =>
+      o.sequence.tails.find(accumulator.sequence.startsWith)
+    }.maxBy(x => x.map(_.length))
+  }
+
+  def findMaxRightOverlap(remainingDnaSequences: List[DNASequence],
+                         accumulator: DNASequence) = {
+    remainingDnaSequences.map{o =>
+      accumulator.sequence.tails.find(o.sequence.startsWith)
+    }.maxBy(x => x.map(_.length))
+  }
+
+  def getCandidateOptLeftOverlap(overlapTextOpt: Option[String], remainingDNASequence: List[DNASequence]) = {
+    overlapTextOpt.flatMap(ot=> remainingDNASequence.find(_.sequence.endsWith(ot)))
+  }
+
+  def getCandidateOptRightOverlap(overlapTextOpt: Option[String], remainingDNASequence: List[DNASequence]) = {
+    overlapTextOpt.flatMap(ot=> remainingDNASequence.find(_.sequence.startsWith(ot)))
+  }
+
   /**
     *
     * @param reference - This is the reference DNA sequence for which a left overlap needs to be found
     * @param others - all other DNA sequences apart from the reference
     * @return - right overlapped combined DNA Sequence
     */
-
   //todo: there is redundancy between the rightOverlap and leftOverlap methods. Would like to remove that using HOF
   private def getLeftOverlap(reference: DNASequence, others: List[DNASequence]) = {
     //todo: place 3 for removing redundancy
