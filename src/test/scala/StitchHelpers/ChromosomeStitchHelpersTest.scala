@@ -16,7 +16,7 @@ class ChromosomeStitchHelpersTest extends FunSpec {
       val expected = DNASequence("foo|bar","123456789")
       val actual = ChromosomeStitchHelpers.accumulatorDNASequenceForLeftOverlap(reference, candidate, overlapLength)
 
-
+      assert(actual === expected)
     }
   }
 }
