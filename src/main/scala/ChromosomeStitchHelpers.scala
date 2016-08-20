@@ -3,6 +3,7 @@ import Utils._
 import scala.annotation.tailrec
 
 case class DNASequence(fragmentName: String, sequence: String)
+case class Chromosome(fragmentName: String, sequence: String)
 
 object ChromosomeStitchHelpers{
 
@@ -103,8 +104,8 @@ object ChromosomeStitchHelpers{
     * @param dnaSequences - structured DNA sequences that need to be combined into a chromosome
     * @return - Built chromosome or broken DNA sequence built from the DNA sequences
     */
-  def constructChromosome(dnaSequences:List[DNASequence]) = dnaSequences match {
-    case Nil => DNASequence("","")
+  def constructChromosome(dnaSequences:List[DNASequence]):Either[DNASequence, Chromosome] = dnaSequences match {
+    case Nil => Left(DNASequence("",""))
     case h::t =>
       val rightStitch = getOverlap(h,t,
         findRightOverlap,
@@ -124,11 +125,11 @@ object ChromosomeStitchHelpers{
       val unusedFragments = availableFragments.filterNot(x=> fragmentsInChromosome.contains(x.fragmentName))
 
       if (unusedFragments.nonEmpty){
-        println(  
+        println(
           s"""Number of unused fragments = ${unusedFragments.length}
               |Unused fragment names = $unusedFragments
            """.stripMargin)
-      }
-      stitchedDNASequence
+        Left(stitchedDNASequence)
+      } else Right(Chromosome(stitchedDNASequence.fragmentName, stitchedDNASequence.sequence))
   }
 }

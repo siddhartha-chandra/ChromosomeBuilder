@@ -17,15 +17,23 @@ object Main{
     val DNASequences = Utils.getDNASequences(lines)
     val constructedChromosome = constructChromosome(DNASequences)
 
+
+    val (category, fragmentName, sequence) = constructedChromosome match {
+      case Left(brokenChromosome) =>
+        ("Broken", brokenChromosome.fragmentName, brokenChromosome.sequence)
+      case Right(chromosome) =>
+        ("Complete", chromosome.fragmentName, chromosome.sequence)
+    }
+
     println(
       s"""
-      ~~Constructed Chromosome~~
+      ~~Reconstructed: $category Chromosome~~
 
       Fragments:
-      ${constructedChromosome.fragmentName}
+      $fragmentName
 
       Sequence:
-      ${constructedChromosome.sequence}
+      $sequence
       """)
 
   }
