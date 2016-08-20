@@ -1,4 +1,7 @@
-import Main._
+package Core
+
+import Core.Main._
+import StitchHelpers.DNASequence
 
 import scala.annotation.tailrec
 

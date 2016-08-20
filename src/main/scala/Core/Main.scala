@@ -1,4 +1,6 @@
-import ChromosomeStitchHelpers.constructChromosome
+package Core
+
+import StitchHelpers.ChromosomeStitchHelpers.constructChromosome
 
 import scala.io.Source
 
@@ -27,7 +29,7 @@ object Main{
 
     println(
       s"""
-      ~~Reconstructed: $category Chromosome~~
+      ~~Reconstructed: $category Helpers.Chromosome~~
 
       Fragments:
       $fragmentName

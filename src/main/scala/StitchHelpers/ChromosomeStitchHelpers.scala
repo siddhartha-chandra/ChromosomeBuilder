@@ -1,7 +1,10 @@
-import Utils._
+package StitchHelpers
 
-import scala.annotation.tailrec
+import Core.Utils.isCandidateQualified
 
+/**
+  * Created by siddharthachandra on 8/20/16.
+  */
 case class DNASequence(fragmentName: String, sequence: String)
 case class Chromosome(fragmentName: String, sequence: String)
 
@@ -16,9 +19,9 @@ object ChromosomeStitchHelpers{
     * @return - Combined DNA sequence from candidate and reference.
     *         Both Fragment name and DNA sequence of reference are appended to that of candidate
     */
-  private def accumulatorDNASequenceForLeftOverlap(reference: DNASequence,
-                                   candidate: DNASequence,
-                                   overlapLength: Int) = {
+  private [StitchHelpers] def accumulatorDNASequenceForLeftOverlap(reference: DNASequence,
+                                                                   candidate: DNASequence,
+                                                                   overlapLength: Int) = {
     val newSequence = candidate.sequence.dropRight(overlapLength) + reference.sequence
     val newFragment = candidate.fragmentName + "|" + reference.fragmentName
     DNASequence(newFragment, newSequence)
@@ -33,32 +36,38 @@ object ChromosomeStitchHelpers{
     * @return - Combined DNA sequence from candidate and reference.
     *         Both Fragment name and DNA sequence of candidate are appended to that of reference
     */
-  private def accumulatorDNASequenceForRightOverlap(reference: DNASequence,
-                                    candidate: DNASequence,
-                                    overlapLength: Int) = {
+  private [StitchHelpers] def accumulatorDNASequenceForRightOverlap(reference: DNASequence,
+                                                                    candidate: DNASequence,
+                                                                    overlapLength: Int) = {
     val newSequence = reference.sequence + candidate.sequence.drop(overlapLength)
     val newFragment = reference.fragmentName + "|" +candidate.fragmentName
     DNASequence(newFragment, newSequence)
   }
 
-  private def findLeftOverlap(remainingDnaSequences: List[DNASequence],
-                      accumulator: DNASequence) = {
+  /**
+    *
+    * @param remainingDnaSequences
+    * @param accumulator
+    * @return
+    */
+  private [StitchHelpers] def findLeftOverlap(remainingDnaSequences: List[DNASequence],
+                                              accumulator: DNASequence) = {
     remainingDnaSequences.map{r =>
       r.sequence.tails.find(accumulator.sequence.startsWith)
     }
   }
 
-  private def findRightOverlap(remainingDnaSequences: List[DNASequence],
-                       accumulator: DNASequence) = {
+  private [StitchHelpers] def findRightOverlap(remainingDnaSequences: List[DNASequence],
+                                               accumulator: DNASequence) = {
     remainingDnaSequences.map{r =>
       accumulator.sequence.tails.find(r.sequence.startsWith)
     }
   }
 
-  private def getMatchingTextForLeftOverLap(dnaSequence: String, overlapText: String):Boolean =
+  private [StitchHelpers] def getMatchingTextForLeftOverLap(dnaSequence: String, overlapText: String):Boolean =
     dnaSequence.endsWith(overlapText)
 
-  private def getMatchingTextForRightOverLap(dnaSequence: String, overlapText: String):Boolean =
+  private [StitchHelpers] def getMatchingTextForRightOverLap(dnaSequence: String, overlapText: String):Boolean =
     dnaSequence.startsWith(overlapText)
 
   /**
@@ -68,11 +77,11 @@ object ChromosomeStitchHelpers{
     * @return - right overlapped combined DNA Sequence
     */
 
-  private def getOverlap(reference: DNASequence,
-                         others: List[DNASequence],
-                         findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
-                         matchingTextForOverlap: (String, String) => Boolean,
-                         getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
+  private [StitchHelpers] def getOverlap(reference: DNASequence,
+                                         others: List[DNASequence],
+                                         findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
+                                         matchingTextForOverlap: (String, String) => Boolean,
+                                         getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
 
     def getOverlapInternal(rem: List[DNASequence],
                            accumulator: DNASequence = DNASequence("","")): DNASequence = rem match {
