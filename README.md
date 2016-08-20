@@ -19,14 +19,14 @@ each of the given input strings as a substring.
 
 
 **Example input:**
-\>Frag_56
-ATTAGACCTG
-\>Frag_57
-CCTGCCGGAA
-\>Frag_58
-AGACCTGCCG
-\>Frag_59
-GCCGGAATAC
+\>Frag_56 
+ATTAGACCTG 
+\>Frag_57 
+CCTGCCGGAA 
+\>Frag_58 
+AGACCTGCCG 
+\>Frag_59 
+GCCGGAATAC 
 
 **Example output:**
 
