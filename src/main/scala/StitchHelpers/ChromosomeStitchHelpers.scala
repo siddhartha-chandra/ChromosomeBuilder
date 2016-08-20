@@ -53,15 +53,15 @@ object ChromosomeStitchHelpers{
   private [StitchHelpers] def findLeftOverlap(remainingDnaSequences: List[DNASequence],
                                               accumulator: DNASequence) = {
     remainingDnaSequences.map{r =>
-      r.sequence.tails.find(accumulator.sequence.startsWith)
-    }
+      r.sequence.tails.filter(_.length>0).find(accumulator.sequence.startsWith)
+    }.filterNot(_.isEmpty)
   }
 
   private [StitchHelpers] def findRightOverlap(remainingDnaSequences: List[DNASequence],
                                                accumulator: DNASequence) = {
     remainingDnaSequences.map{r =>
-      accumulator.sequence.tails.find(r.sequence.startsWith)
-    }
+      accumulator.sequence.tails.filter(_.length>0).find(r.sequence.startsWith)
+    }.filterNot(_.isEmpty)
   }
 
   private [StitchHelpers] def getMatchingTextForLeftOverLap(dnaSequence: String, overlapText: String):Boolean =
