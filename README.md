@@ -19,13 +19,13 @@ each of the given input strings as a substring.
 
 
 **Example input:**
-``>``Frag_56
+\>Frag_56
 ATTAGACCTG
-``>``Frag_57
+\>Frag_57
 CCTGCCGGAA
-``>``Frag_58
+\>Frag_58
 AGACCTGCCG
-``>``Frag_59
+\>Frag_59
 GCCGGAATAC
 
 **Example output:**
