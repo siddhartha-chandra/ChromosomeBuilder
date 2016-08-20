@@ -165,6 +165,30 @@ class ChromosomeStitchHelpersTest extends FunSpec {
 
       assert(expected == actual)
     }
+
+    it("returns reference if candidates are Nil for left overlap"){
+
+      val actual = getOverlap(reference,
+        Nil,
+        findLeftOverlap,
+        doesDNASequenceContainLeftOverlapTxt,
+        accumulatorDNASequenceForLeftOverlap )
+
+      assert(actual == reference)
+
+    }
+
+    it("returns reference if candidates are Nil for right overlap"){
+
+      val actual = getOverlap(reference,
+        Nil,
+        findRightOverlap,
+        doesDNASequenceContainRightOverlapTxt,
+        accumulatorDNASequenceForRightOverlap )
+
+      assert(actual == reference)
+
+    }
   }
 
   describe("ChromosomeStitchHelpers.constructChromosome"){
@@ -186,6 +210,12 @@ class ChromosomeStitchHelpersTest extends FunSpec {
     it("returns a DNA sequence when at least one DNA sequence from provided sequences is not utilized in stitching"){
       val actual = constructChromosome(completeDnaSequences:+DNASequence("white","CCAAADGTCC"))
       val expected = Left(DNASequence("Mary|had|a|little|lamb","AAGGGCACTGGGCADDDAC"))
+      assert(actual === expected)
+    }
+
+    it("returns an empty DNA sequence if an empty list of DNA sequences is provided"){
+      val actual = constructChromosome(Nil)
+      val expected = Left(DNASequence("",""))
       assert(actual === expected)
     }
   }
