@@ -53,7 +53,7 @@ object ChromosomeStitchHelpers{
     */
   private [StitchHelpers] def findLeftOverlap(remainingDnaSequences: List[DNASequence],
                                               accumulator: DNASequence) = {
-    remainingDnaSequences.map{r =>
+    remainingDnaSequences.flatMap{r =>
       r.sequence.tails.filter(_.length>0).find(accumulator.sequence.startsWith)
     }.filterNot(_.isEmpty)
   }
@@ -67,7 +67,7 @@ object ChromosomeStitchHelpers{
     */
   private [StitchHelpers] def findRightOverlap(remainingDnaSequences: List[DNASequence],
                                                accumulator: DNASequence) = {
-    remainingDnaSequences.map{r =>
+    remainingDnaSequences.flatMap{r =>
       accumulator.sequence.tails.filter(_.length>0).find(r.sequence.startsWith)
     }.filterNot(_.isEmpty)
   }
@@ -84,14 +84,14 @@ object ChromosomeStitchHelpers{
     *
     * @param reference - This is the reference DNA sequence for which an overlap needs to be found
     * @param others - all other DNA sequences apart from the reference
-    * @param findOverlap - function that finds a left or tight overlap
+    * @param findOverlapTexts - function that finds a left or tight overlap
     * @param doesDNASequenceContainOverlapTxt
     * @param getDnaSequenceForAccumulator - combines the candidate and reference DNA sequence into one
     * @return - right or left overlapped combined DNA Sequence de
     */
   private [StitchHelpers] def getOverlap(reference: DNASequence,
                                          others: List[DNASequence],
-                                         findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
+                                         findOverlapTexts: (List[DNASequence], DNASequence) => List[String],
                                          doesDNASequenceContainOverlapTxt: (String, String) => Boolean,
                                          getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
 
@@ -99,10 +99,13 @@ object ChromosomeStitchHelpers{
                            accumulator: DNASequence = DNASequence("","")): DNASequence = rem match {
       case Nil => accumulator
       case _ =>
-
+        val overlapTexts = findOverlapTexts(rem, accumulator)
         //finds max overlap text of accumulator and remaining
-        val overlapTextOpt = findOverlap(rem, accumulator).
-          maxBy(x => x.map(_.length)) //Assumption: that there should be only one maximum matching sequence
+        val overlapTextOpt = overlapTexts match {
+          case Nil => None
+          case _ =>
+            Some(overlapTexts.maxBy(_.length)) //Assumption: that there should be only one maximum matching sequence
+        }
 
         val candidateOpt = overlapTextOpt.flatMap{ot=>
           rem.find(c=> doesDNASequenceContainOverlapTxt(c.sequence, ot))}

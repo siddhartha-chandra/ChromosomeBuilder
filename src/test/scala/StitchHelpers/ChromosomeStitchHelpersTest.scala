@@ -49,7 +49,7 @@ class ChromosomeStitchHelpersTest extends FunSpec {
         DNASequence("foo6", "012")
       )
 
-      val expected = List(Some("3456"), Some("34"), Some("3"))
+      val expected = List("3456", "34", "3")
       val actual = findLeftOverlap(candidates, reference)
 
       assert(expected === actual)
@@ -80,7 +80,7 @@ class ChromosomeStitchHelpersTest extends FunSpec {
         DNASequence("bar6", "12345")
       )
 
-      val expected = List(Some("3456"), Some("56"), Some("6"))
+      val expected = List("3456", "56", "6")
       val actual = findRightOverlap(candidates, reference)
 
       assert(expected === actual)
@@ -130,7 +130,64 @@ class ChromosomeStitchHelpersTest extends FunSpec {
       assert(dnaSequences.forall(doesDNASequenceContainLeftOverlapTxt(_, overlapText)) === false)
     }
   }
-//  describe("ChromosomeStitchHelpers.getOverlap")
-//  describe("ChromosomeStitchHelpers.constructChromosome")
+
+  describe("ChromosomeStitchHelpers.getOverlap"){
+
+    val reference = DNASequence("a", "ACTGGGC")
+    val others = List(
+      DNASequence("Mary", "AAGGGCACT"),
+      DNASequence("had", "GGCACTG"),
+      DNASequence("little", "GGGCAD"),
+      DNASequence("lamb", "GGCADDDAC")
+    )
+
+    it("returns a combined DNA sequence stitched to the right when right overlap functions are provided"){
+
+      val expected =  DNASequence("a|little|lamb","ACTGGGCADDDAC")
+      val actual = getOverlap(reference,
+        others,
+        findRightOverlap,
+        doesDNASequenceContainRightOverlapTxt,
+        accumulatorDNASequenceForRightOverlap )
+
+      assert(expected == actual)
+
+    }
+
+    it("returns a combined DNA sequence stitched to the left when left overlap functions are provided"){
+
+      val expected =  DNASequence("Mary|had|a","AAGGGCACTGGGC")
+      val actual = getOverlap(reference,
+        others,
+        findLeftOverlap,
+        doesDNASequenceContainLeftOverlapTxt,
+        accumulatorDNASequenceForLeftOverlap )
+
+      assert(expected == actual)
+    }
+  }
+
+  describe("ChromosomeStitchHelpers.constructChromosome"){
+
+    val completeDnaSequences = List(
+      DNASequence("a", "ACTGGGC"),
+      DNASequence("Mary", "AAGGGCACT"),
+      DNASequence("had", "GGCACTG"),
+      DNASequence("little", "GGGCAD"),
+      DNASequence("lamb", "GGCADDDAC")
+    )
+
+    it("returns a Chromosome when all DNA sequences are utilized for stitching"){
+      val actual = constructChromosome(completeDnaSequences)
+      val expected = Right(Chromosome("Mary|had|a|little|lamb","AAGGGCACTGGGCADDDAC"))
+      assert(actual === expected)
+    }
+
+    it("returns a DNA sequence when at least one DNA sequence from provided sequences is not utilized in stitching"){
+      val actual = constructChromosome(completeDnaSequences:+DNASequence("white","CCAAADGTCC"))
+      val expected = Left(DNASequence("Mary|had|a|little|lamb","AAGGGCACTGGGCADDDAC"))
+      assert(actual === expected)
+    }
+  }
 
 }
