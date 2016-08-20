@@ -1,6 +1,9 @@
 # Chromosome-Builder
 
+~~~~~~~~~~
 Challenge:
+~~~~~~~~~~
+
 The input to the problem is at most 50 DNA sequences (i.e, the character
 set is limited to T/C/G/A) whose length does not exceed 1000 
 characters. The sequences are given in FASTA 
@@ -15,17 +18,18 @@ The output of your program should be this unique sequence that contains
 each of the given input strings as a substring.
 
 
-Example input:
->Frag_56
+**Example input:**
+``>``Frag_56
 ATTAGACCTG
->Frag_57
+``>``Frag_57
 CCTGCCGGAA
->Frag_58
+``>``Frag_58
 AGACCTGCCG
->Frag_59
+``>``Frag_59
 GCCGGAATAC
 
-Example output:
+**Example output:**
+
 ~~ Reconstructed: Complete Chromosome ~~
 
 Fragments:
