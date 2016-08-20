@@ -29,7 +29,7 @@ object Main{
 
     println(
       s"""
-      ~~Reconstructed: $category Helpers.Chromosome~~
+      ~~Reconstructed: $category Chromosome~~
 
       Fragments:
       $fragmentName

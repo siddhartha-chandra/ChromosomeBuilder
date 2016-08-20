@@ -46,9 +46,10 @@ object ChromosomeStitchHelpers{
 
   /**
     *
-    * @param remainingDnaSequences
-    * @param accumulator
-    * @return
+    * @param remainingDnaSequences - candidate DNA sequences
+    * @param accumulator - reference DNA sequence
+    * @return - list of overlapping texts for the beginning portion of the accumulator and
+      ending portion of all dna sequences in remainingDnaSequences
     */
   private [StitchHelpers] def findLeftOverlap(remainingDnaSequences: List[DNASequence],
                                               accumulator: DNASequence) = {
@@ -57,6 +58,13 @@ object ChromosomeStitchHelpers{
     }.filterNot(_.isEmpty)
   }
 
+  /**
+    *
+    * @param remainingDnaSequences - candidate DNA sequences
+    * @param accumulator - reference DNA sequence
+    * @return - list of overlapping texts for the ending portion of the accumulator and
+      beginning portion of all dna sequences in remainingDnaSequences
+    */
   private [StitchHelpers] def findRightOverlap(remainingDnaSequences: List[DNASequence],
                                                accumulator: DNASequence) = {
     remainingDnaSequences.map{r =>
@@ -64,23 +72,27 @@ object ChromosomeStitchHelpers{
     }.filterNot(_.isEmpty)
   }
 
-  private [StitchHelpers] def getMatchingTextForLeftOverLap(dnaSequence: String, overlapText: String):Boolean =
+
+  private [StitchHelpers] def doesDNASequenceContainLeftOverlapTxt(dnaSequence: String, overlapText: String):Boolean =
     dnaSequence.endsWith(overlapText)
 
-  private [StitchHelpers] def getMatchingTextForRightOverLap(dnaSequence: String, overlapText: String):Boolean =
+  private [StitchHelpers] def doesDNASequenceContainRightOverlapTxt(dnaSequence: String, overlapText: String):Boolean =
     dnaSequence.startsWith(overlapText)
+
 
   /**
     *
-    * @param reference - This is the reference DNA sequence for which a left overlap needs to be found
+    * @param reference - This is the reference DNA sequence for which an overlap needs to be found
     * @param others - all other DNA sequences apart from the reference
-    * @return - right overlapped combined DNA Sequence
+    * @param findOverlap - function that finds a left or tight overlap
+    * @param doesDNASequenceContainOverlapTxt
+    * @param getDnaSequenceForAccumulator - combines the candidate and reference DNA sequence into one
+    * @return - right or left overlapped combined DNA Sequence de
     */
-
   private [StitchHelpers] def getOverlap(reference: DNASequence,
                                          others: List[DNASequence],
                                          findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
-                                         matchingTextForOverlap: (String, String) => Boolean,
+                                         doesDNASequenceContainOverlapTxt: (String, String) => Boolean,
                                          getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
 
     def getOverlapInternal(rem: List[DNASequence],
@@ -93,7 +105,7 @@ object ChromosomeStitchHelpers{
           maxBy(x => x.map(_.length)) //Assumption: that there should be only one maximum matching sequence
 
         val candidateOpt = overlapTextOpt.flatMap{ot=>
-          rem.find(c=> matchingTextForOverlap(c.sequence, ot))}
+          rem.find(c=> doesDNASequenceContainOverlapTxt(c.sequence, ot))}
 
         if (!isCandidateQualified(overlapTextOpt, candidateOpt))
           getOverlapInternal(Nil, accumulator)
@@ -118,7 +130,7 @@ object ChromosomeStitchHelpers{
     case h::t =>
       val rightStitch = getOverlap(h,t,
         findRightOverlap,
-        getMatchingTextForRightOverLap,
+        doesDNASequenceContainRightOverlapTxt,
         accumulatorDNASequenceForRightOverlap)
 
       val fragmentsInRightStitch = rightStitch.fragmentName.split('|')
@@ -127,7 +139,7 @@ object ChromosomeStitchHelpers{
       val stitchedDNASequence = getOverlap(rightStitch,
         availableFragments,
         findLeftOverlap,
-        getMatchingTextForLeftOverLap,
+        doesDNASequenceContainLeftOverlapTxt,
         accumulatorDNASequenceForLeftOverlap)
 
       val fragmentsInChromosome = stitchedDNASequence.fragmentName.split('|')
