@@ -19,23 +19,37 @@ each of the given input strings as a substring.
 
 
 **Example input:**
+
 \>Frag_56 
-ATTAGACCTG 
-\>Frag_57 
-CCTGCCGGAA 
-\>Frag_58 
-AGACCTGCCG 
-\>Frag_59 
+
+ATTAGACCTG
+ 
+ 
+\>Frag_57
+ 
+CCTGCCGGAA
+ 
+ 
+\>Frag_58
+ 
+AGACCTGCCG
+ 
+ 
+\>Frag_59
+ 
 GCCGGAATAC 
+
 
 **Example output:**
 
 ~~ Reconstructed: Complete Chromosome ~~
 
 Fragments:
+
 Frag_56|Frag_58|Frag_57|Frag_59
 
 Sequence:
+
 ATTAGACCTGCCGGAATAC
   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
