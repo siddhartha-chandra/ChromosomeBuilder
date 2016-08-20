@@ -2,9 +2,20 @@ import Utils._
 
 import scala.annotation.tailrec
 
+case class DNASequence(fragmentName: String, sequence: String)
+
 object ChromosomeStitchHelpers{
 
-  private def getDNASequenceForLeftOverlap(reference: DNASequence,
+  /**
+    * This combines a candidate DNA sequence that crossed the set threshold for left overlap
+    * with the reference DNA sequence.
+    * @param reference - DNA sequence to which the candidate DNA sequence is prepended
+    * @param candidate - gets appended to reference DNA sequence
+    * @param overlapLength - length of text that overlaps between the candidate and reference
+    * @return - Combined DNA sequence from candidate and reference.
+    *         Both Fragment name and DNA sequence of reference are appended to that of candidate
+    */
+  private def accumulatorDNASequenceForLeftOverlap(reference: DNASequence,
                                    candidate: DNASequence,
                                    overlapLength: Int) = {
     val newSequence = candidate.sequence.dropRight(overlapLength) + reference.sequence
@@ -12,7 +23,16 @@ object ChromosomeStitchHelpers{
     DNASequence(newFragment, newSequence)
   }
 
-  private def getDNASequenceForRightOverlap(reference: DNASequence,
+  /**
+    * This combines a candidate DNA sequence that crossed the set threshold for right overlap
+    * with the reference DNA sequence.
+    * @param reference - DNA sequence to which the candidate DNA sequence is prepended
+    * @param candidate - gets appended to reference DNA sequence
+    * @param overlapLength - length of text that overlaps between the candidate and reference
+    * @return - Combined DNA sequence from candidate and reference.
+    *         Both Fragment name and DNA sequence of candidate are appended to that of reference
+    */
+  private def accumulatorDNASequenceForRightOverlap(reference: DNASequence,
                                     candidate: DNASequence,
                                     overlapLength: Int) = {
     val newSequence = reference.sequence + candidate.sequence.drop(overlapLength)
@@ -48,13 +68,13 @@ object ChromosomeStitchHelpers{
     */
 
   private def getOverlap(reference: DNASequence,
-                             others: List[DNASequence],
-                             findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
-                             matchingTextForOverlap: (String, String) => Boolean,
-                             getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
+                         others: List[DNASequence],
+                         findOverlap: (List[DNASequence], DNASequence) => List[Option[String]],
+                         matchingTextForOverlap: (String, String) => Boolean,
+                         getDnaSequenceForAccumulator: (DNASequence, DNASequence, Int)=> DNASequence) = {
 
     def getOverlapInternal(rem: List[DNASequence],
-                                accumulator: DNASequence = DNASequence("","")): DNASequence = rem match {
+                           accumulator: DNASequence = DNASequence("","")): DNASequence = rem match {
       case Nil => accumulator
       case _ =>
 
@@ -81,7 +101,7 @@ object ChromosomeStitchHelpers{
   /**
     *
     * @param dnaSequences - structured DNA sequences that need to be combined into a chromosome
-    * @return - combined DNA sequence
+    * @return - Built chromosome or broken DNA sequence built from the DNA sequences
     */
   def constructChromosome(dnaSequences:List[DNASequence]) = dnaSequences match {
     case Nil => DNASequence("","")
@@ -89,27 +109,26 @@ object ChromosomeStitchHelpers{
       val rightStitch = getOverlap(h,t,
         findRightOverlap,
         getMatchingTextForRightOverLap,
-        getDNASequenceForRightOverlap)
+        accumulatorDNASequenceForRightOverlap)
 
       val fragmentsInRightStitch = rightStitch.fragmentName.split('|')
       val availableFragments = dnaSequences.filterNot(x=> fragmentsInRightStitch.contains(x.fragmentName))
 
-      val builtChromosome = getOverlap(rightStitch,
+      val stitchedDNASequence = getOverlap(rightStitch,
         availableFragments,
         findLeftOverlap,
         getMatchingTextForLeftOverLap,
-        getDNASequenceForLeftOverlap)
+        accumulatorDNASequenceForLeftOverlap)
 
-      val fragmentsInChromosome = builtChromosome.fragmentName.split('|')
+      val fragmentsInChromosome = stitchedDNASequence.fragmentName.split('|')
       val unusedFragments = availableFragments.filterNot(x=> fragmentsInChromosome.contains(x.fragmentName))
 
-      if (unusedFragments.nonEmpty)
-        println(
+      if (unusedFragments.nonEmpty){
+        println(  
           s"""Number of unused fragments = ${unusedFragments.length}
-             |Unused fragment names = $unusedFragments
+              |Unused fragment names = $unusedFragments
            """.stripMargin)
-
-      builtChromosome
-
+      }
+      stitchedDNASequence
   }
 }

@@ -2,8 +2,6 @@ import ChromosomeStitchHelpers.constructChromosome
 
 import scala.io.Source
 
-case class DNASequence(fragmentName: String, sequence: String)
-case class OverlapCandidate(candidate: DNASequence, overlapText:String)
 
 object Main{
 

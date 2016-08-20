@@ -4,6 +4,6 @@
 
 import org.scalatest._
 
-class ChromosomeStitchHelpers$Test extends FunSpec {
+class ChromosomeStitchHelpersTest extends FunSpec {
 
 }
