@@ -4,11 +4,12 @@ import StitchHelpers.ChromosomeStitchHelpers.constructChromosome
 
 import scala.io.Source
 
-
-object Main{
+object ChromosomeBuilder{
 
   type Threshold = Double
-  //as more than half the length for overlap is the criteria
+
+  //denotes the ratio of overlapping text to the reference text.
+  //Assigned as 0.5 as the problem mentions that overlap must be greater than half the length.
   val threshold:Threshold = 0.5
   val currentDirectory =  new java.io.File(".").getCanonicalPath
   val fileName = "data_set.txt"
@@ -29,7 +30,7 @@ object Main{
 
     println(
       s"""
-      ~~Reconstructed: $category Chromosome~~
+      ~~ Reconstructed: $category Chromosome ~~
 
       Fragments:
       $fragmentName
@@ -37,6 +38,5 @@ object Main{
       Sequence:
       $sequence
       """)
-
   }
 }

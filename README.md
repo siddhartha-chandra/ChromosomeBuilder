@@ -26,10 +26,14 @@ AGACCTGCCG
 GCCGGAATAC
 
 Example output:
-fragment name - "Frag_56|Frag_57|Frag_58|Frag_59"
-dna sequence - "ATTAGACCTGCCGGAATAC"
-  
+~~ Reconstructed: Complete Chromosome ~~
 
+Fragments:
+Frag_56|Frag_58|Frag_57|Frag_59
+
+Sequence:
+ATTAGACCTGCCGGAATAC
+  
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Approach for solving:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

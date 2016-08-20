@@ -1,6 +1,6 @@
 package Core
 
-import Core.Main._
+import Core.ChromosomeBuilder._
 import StitchHelpers.DNASequence
 
 import scala.annotation.tailrec
