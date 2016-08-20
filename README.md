@@ -26,26 +26,32 @@ AGACCTGCCG
 GCCGGAATAC
 
 Example output:
-ATTAGACCTGCCGGAATAC
-i.e (ATTAGACCTG, AGACCTGCCG, CCTGCCGGAA, GCCGGAATAC)  
-
-
+fragment name - "Frag_56|Frag_57|Frag_58|Frag_59"
+dna sequence - "ATTAGACCTGCCGGAATAC"
+  
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Approach for solving:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here are the broad steps:
- 
-1) Create a DNASequence case class 
-2) Parse the data set file and deserialize lines into the DNASequence case class
-3) Once we have a List of DNA sequence, construct the chromosome as follows:
-    a) Recursively find right overlapping sequences that pass the 
-       threshold and get the combined right stitched part
+  
+1) Parse the data set file and deserialize lines into a list of dna sequences
+2) Once we have a List of dna sequence, construct the chromosome as follows:
+    a) get right stitch: 
+       Take a reference DNA sequence from the list and recursively 
+       reconstruct the reference by iteratively joining a candidate dna 
+       sequence from the remaining list which has the maximum overlap of 
+       text in its beginning with the end portion of the reference of that iteration.
     b) Filter the used fragments
-    c) Recursively apply left overlap stitching to the remaining fragments
-    d) This would create the resultant stitched chromosome  
-
+    c) get Left Stitch:
+       Take the right stitch produced in a) as reference and remaining
+       fragments as the list of dna sequences. Now, recursively reconstruct 
+       this reference by iteratively joining a candidate dna sequence 
+       from the remaining list which has the maximum overlap of 
+       text in its ending with the beginning portion of the reference of that iteration.
+    d) In case all dna sequences are utlized a Chromose is created, else
+       a DNA Sequence is generated.
 
 ~~~~~~~~~~~~~~~~
 Miscellaneous:
@@ -53,5 +59,5 @@ Miscellaneous:
 There is a possibility that there could be a mutation in gene collection,
 which would cause a noisy pattern in the gene, breaking the longest 
 common subsequence match between two DNA sequences. To tackle this,
-we can apply advanced string matching algorithms like Ratcliff-Obershelp
+we might be able to use string matching algorithms like Ratcliff-Obershelp
 to ensure that noise does not affect the matching.
