@@ -62,8 +62,7 @@ Here are the broad steps:
 
 2) Once we have a List of dna sequence, construct the chromosome as follows:
    
-   a) get right stitch:
-         
+   a) get Right stitch:   
       Take a reference DNA sequence from the list and recursively 
       reconstruct the reference by iteratively joining a candidate dna 
       sequence from the remaining list which has the maximum overlap of 
@@ -72,7 +71,6 @@ Here are the broad steps:
    b) Filter the used fragments
     
    c) get Left Stitch:
-      
       Take the right stitch produced in a) as reference and remaining
       fragments as the list of dna sequences. Now, recursively reconstruct 
       this reference by iteratively joining a candidate dna sequence 
