@@ -20,36 +20,23 @@ each of the given input strings as a substring.
 
 **Example input:**
 
-\>Frag_56 
-
-ATTAGACCTG
- 
- 
-\>Frag_57
- 
-CCTGCCGGAA
- 
- 
-\>Frag_58
- 
-AGACCTGCCG
- 
- 
-\>Frag_59
- 
+\>Frag_56   
+ATTAGACCTG   
+\>Frag_57   
+CCTGCCGGAA   
+\>Frag_58   
+AGACCTGCCG   
+\>Frag_59   
 GCCGGAATAC 
-
 
 **Example output:**
 
 ~~ Reconstructed: Complete Chromosome ~~
 
-Fragments:
-
+Fragments:   
 Frag_56|Frag_58|Frag_57|Frag_59
 
-Sequence:
-
+Sequence:   
 ATTAGACCTGCCGGAATAC
   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,19 +45,17 @@ Approach for solving:
 
 Here are the broad steps:
   
-1) Parse the data set file and deserialize lines into a list of dna sequences
-
-2) Once we have a List of dna sequence, construct the chromosome as follows:
-   
+1) Parse the data set file and deserialize lines into a list of dna sequences   
+2) Once we have a List of dna sequence, construct the chromosome as follows:    
    a) get Right stitch:   
       Take a reference DNA sequence from the list and recursively 
       reconstruct the reference by iteratively joining a candidate dna 
       sequence from the remaining list which has the maximum overlap of 
       text in its beginning with the end portion of the reference of that iteration.
-       
-   b) Filter the used fragments
-    
-   c) get Left Stitch:
+
+   b) Filter the used fragments   
+   
+   c) get Left Stitch:    
       Take the right stitch produced in a) as reference and remaining
       fragments as the list of dna sequences. Now, recursively reconstruct 
       this reference by iteratively joining a candidate dna sequence 
