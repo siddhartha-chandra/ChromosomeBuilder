@@ -38,7 +38,7 @@ class UtilsTest extends FunSpec {
   describe("Utils.getDNASequences") {
     it("returns empty list if the input provided is an empty iterator"){
       val input = Iterator()
-      assert(getDNASequences(input) === Nil)
+      assert(parseDNASequencesFromRaw(input) === Nil)
     }
 
     it("returns a list of DNA sequences if the input provided has strings in the FASTA format"){
@@ -57,7 +57,7 @@ class UtilsTest extends FunSpec {
         DNASequence("Frag_59", "GCCGGAATAC")
       )
 
-      assert(actual === getDNASequences(input))
+      assert(actual === parseDNASequencesFromRaw(input))
     }
   }
 

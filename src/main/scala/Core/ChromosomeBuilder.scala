@@ -1,5 +1,6 @@
 package Core
 
+import Core.Utils.parseDNASequencesFromRaw
 import StitchHelpers.ChromosomeStitchHelpers.constructChromosome
 
 import scala.io.Source
@@ -17,7 +18,7 @@ object ChromosomeBuilder{
 
   def main(args: Array[String]): Unit = {
     val lines = Source.fromFile(filePath).getLines()
-    val DNASequences = Utils.getDNASequences(lines)
+    val DNASequences = parseDNASequencesFromRaw(lines)
     val constructedChromosome = constructChromosome(DNASequences)
 
 
