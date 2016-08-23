@@ -18,7 +18,7 @@ object Utils{
     }
   }
 
-  def getDNASequences(dnaDataRaw: Iterator[String]) = {
+  def parseDNASequencesFromRaw(dnaDataRaw: Iterator[String]) = {
     @tailrec
     def getDNASequencesInternal(remaining: List[String],
                                 acc: List[DNASequence] = Nil): List[DNASequence] = remaining match {
